@@ -136,7 +136,7 @@ C = windowResult
 pcall(function()
     C:EditOpenButton({
         Title = "Project_ink_HUB_2026!",
-        Icon = "rbxassetid://71953031400395",
+        Icon = "crown",
         StrokeThickness = 5,
         TextColor = Color3.fromRGB(150, 150, 150),
         TitleColor = Color3.fromRGB(150, 150, 150),
@@ -149,26 +149,7 @@ pcall(function()
     })
 end)
 
-pcall(function()
-    local CoreGui = game:GetService("CoreGui")
-    local crownAsset = "71953031400395"
-    local function enlargeCrown(obj)
-        if (obj:IsA("ImageLabel") or obj:IsA("ImageButton")) and string.find(obj.Image or "", crownAsset, 1, true) then
-            local current = obj.AbsoluteSize
-            local side = math.max(current.X, current.Y, 24)
-            local target = math.clamp(math.floor(side * 1.35), 30, 42)
-            obj.Size = UDim2.fromOffset(target, target)
-        end
-    end
-    for _, obj in ipairs(CoreGui:GetDescendants()) do
-        enlargeCrown(obj)
-    end
-    CoreGui.DescendantAdded:Connect(function(obj)
-        task.defer(function()
-            pcall(function() enlargeCrown(obj) end)
-        end)
-    end)
-end)
+
 
 pcall(function()
     local RunService = game:GetService("RunService")
@@ -399,7 +380,7 @@ E:Slider({
     end
 })
 
-E:Button({Title="飞行",Callback=function()loadstring(game:HttpGet("https://raw.githubusercontent.com/zczczczc766/NailongHUB/refs/heads/main/%E9%A3%9E%E8%A1%8C%E8%84%9A%E6%9C%AC.lua"))()end})
+E:Button({Title="飞行",Callback=function()loadstring(game:HttpGet("https://raw.githubusercontent.com/inkkkkkkkk/Theinkremains/refs/heads/main/%E9%A3%9E%E8%A1%8C%E8%84%9A%E6%9C%AC.lua"))()end})
 
 LocalPlayer.CharacterAdded:Connect(function(char)
     task.wait(0.1)
@@ -1270,37 +1251,13 @@ local function getPlayerNames()
     return names
 end
 
-local function createPlayerDropdown()
-    local names=getPlayerNames()
-    selectedPlayer=nil
-    playerDropdown=TransTab:Dropdown({
-        Title="选择玩家",
-        Values=names,
-        Value=names[1],
-        Callback=function(v)
-            selectedPlayer=v
-        end
-    })
-end
-
-local playerDropdown=nil
-createPlayerDropdown()
-
-local function refreshPlayerList()
-    if playerDropdown then
-        pcall(function() playerDropdown:Destroy() end)
-        playerDropdown=nil
-    end
-    createPlayerDropdown()
-end
+local playerDropdown=TransTab:Dropdown({Title="选择玩家",Values=getPlayerNames(),Value="无其他玩家",Callback=function(v)selectedPlayer=v end})
 
 TransTab:Button({Title="刷新列表",Callback=function()
-    local ok,err=pcall(refreshPlayerList)
-    if ok then
-        A:SetCore("SendNotification",{Title="已刷新",Text="玩家列表已更新",Duration=2})
-    else
-        warn("[ink_HUB] 传送列表刷新失败:",err)
-    end
+    local newNames=getPlayerNames()
+    playerDropdown:Refresh(newNames)
+    selectedPlayer=nil
+    A:SetCore("SendNotification",{Title="已刷新",Text="玩家列表已更新，请重新选择玩家",Duration=2})
 end})
 
 TransTab:Button({Title="传送",Callback=function()
@@ -3044,7 +3001,7 @@ end})
 
 task.spawn(function()
     pcall(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/zczczczc766/NailongHUB/refs/heads/main/%E4%BD%9C%E8%80%85%E6%A3%80%E6%B5%8B.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/inkkkkkkkk/Theinkremains/refs/heads/main/%E4%BD%9C%E8%80%85%E6%A3%80%E6%B5%8B.lua"))()
     end)
 end)
 
