@@ -316,6 +316,28 @@ local speedEnabled=false
 local jumpEnabled=false
 local speedValue=16
 local jumpValue=50
+local rotationEnabled=false
+local rotationSpeed=120
+local rotationConnection=nil
+
+local function stopRotation()
+    if rotationConnection then
+        rotationConnection:Disconnect()
+        rotationConnection=nil
+    end
+end
+
+local function startRotation()
+    stopRotation()
+    rotationConnection=game:GetService("RunService").Heartbeat:Connect(function(dt)
+        if not rotationEnabled then return end
+        local char=LocalPlayer.Character
+        if not char then return end
+        local hrp=char:FindFirstChild("HumanoidRootPart")
+        if not hrp then return end
+        hrp.CFrame=hrp.CFrame*CFrame.Angles(0,math.rad(rotationSpeed)*dt,0)
+    end)
+end
 
 E:Toggle({Title="启用修改速度",Value=false,Callback=function(s)
     speedEnabled=s
@@ -361,23 +383,17 @@ E:Slider({Title="修改跳跃高度",Value={Min=20,Max=200,Default=50},Callback=
     end
 end})
 
-local gravityEnabled=false
-local gravityValue=196.2
-
-E:Toggle({Title="启用重力设置",Value=false,Callback=function(s)
-    gravityEnabled=s
+E:Toggle({Title="旋转开关",Value=false,Callback=function(s)
+    rotationEnabled=s
     if s then
-        workspace.Gravity=gravityValue
+        startRotation()
     else
-        workspace.Gravity=196.2
+        stopRotation()
     end
 end})
 
-E:Slider({Title="重力设置",Value={Min=0,Max=500,Default=196.2},Step=1,Callback=function(v)
-    gravityValue=v
-    if gravityEnabled then
-        workspace.Gravity=v
-    end
+E:Slider({Title="旋转速度",Value={Min=10,Max=1000,Default=120},Callback=function(v)
+    rotationSpeed=v
 end})
 
 E:Slider({
