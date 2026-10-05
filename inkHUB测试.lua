@@ -29,12 +29,211 @@ if not tasklib.spawn then
 end
 task=tasklib
 
-local ok,err=xpcall(function()
-
 local A=game:GetService("StarterGui")
 
 local finishStartup = nil
 local updateStartupProgress = nil
+
+do
+    local startupGui
+    local startupProgress = 0
+    local startupFinished = false
+
+    local function createStartupAnimation()
+        local ok, result = pcall(function()
+            local Players = game:GetService("Players")
+            local TweenService = game:GetService("TweenService")
+            local CoreGui = game:GetService("CoreGui")
+
+            local old = CoreGui:FindFirstChild("ink_HUB_StartupAnimation")
+            if old then old:Destroy() end
+
+            startupGui = Instance.new("ScreenGui")
+            startupGui.Name = "ink_HUB_StartupAnimation"
+            startupGui.IgnoreGuiInset = true
+            startupGui.ResetOnSpawn = false
+            startupGui.DisplayOrder = 2147483647
+            startupGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+            startupGui.Parent = CoreGui
+
+            local bg = Instance.new("Frame")
+            bg.Size = UDim2.fromScale(1,1)
+            bg.BackgroundColor3 = Color3.fromRGB(10,10,10)
+            bg.BorderSizePixel = 0
+            bg.Parent = startupGui
+
+            local center = Instance.new("Frame")
+            center.AnchorPoint = Vector2.new(0.5,0.5)
+            center.Position = UDim2.fromScale(0.5,0.45)
+            center.Size = UDim2.fromOffset(220,220)
+            center.BackgroundTransparency = 1
+            center.Parent = bg
+
+            local image = Instance.new("ImageLabel")
+            image.Name = "Logo"
+            image.AnchorPoint = Vector2.new(0.5,0.5)
+            image.Position = UDim2.fromScale(0.5,0.5)
+            image.Size = UDim2.fromOffset(140,140)
+            image.BackgroundTransparency = 1
+            image.Image = "rbxassetid://131444442444524"
+            image.ScaleType = Enum.ScaleType.Fit
+            image.Parent = center
+
+            local corner = Instance.new("UICorner")
+            corner.CornerRadius = UDim.new(0,14)
+            corner.Parent = image
+
+            local stroke = Instance.new("UIStroke")
+            stroke.Thickness = 2
+            stroke.Transparency = 0.1
+            stroke.Color = Color3.fromRGB(155,155,155)
+            stroke.Parent = image
+
+            local title = Instance.new("TextLabel")
+            title.AnchorPoint = Vector2.new(0.5,0)
+            title.Position = UDim2.new(0.5,0,1,18)
+            title.Size = UDim2.fromOffset(380,42)
+            title.BackgroundTransparency = 1
+            title.Text = "Project_ink_HUB_2026!"
+            title.TextColor3 = Color3.fromRGB(220,220,220)
+            title.TextSize = 32
+            title.Font = Enum.Font.GothamBold
+            title.Parent = center
+
+            local status = Instance.new("TextLabel")
+            status.AnchorPoint = Vector2.new(0.5,0)
+            status.Position = UDim2.new(0.5,0,1,55)
+            status.Size = UDim2.fromOffset(420,30)
+            status.BackgroundTransparency = 1
+            status.Text = "正在启动..."
+            status.TextColor3 = Color3.fromRGB(155,155,155)
+            status.TextSize = 16
+            status.Font = Enum.Font.Gotham
+            status.Parent = center
+
+            local barBack = Instance.new("Frame")
+            barBack.AnchorPoint = Vector2.new(0.5,0)
+            barBack.Position = UDim2.new(0.5,0,1,88)
+            barBack.Size = UDim2.fromOffset(340,7)
+            barBack.BackgroundColor3 = Color3.fromRGB(45,45,45)
+            barBack.BorderSizePixel = 0
+            barBack.Parent = center
+
+            local barCorner = Instance.new("UICorner")
+            barCorner.CornerRadius = UDim.new(1,0)
+            barCorner.Parent = barBack
+
+            local bar = Instance.new("Frame")
+            bar.Size = UDim2.new(0,0,1,0)
+            bar.BackgroundColor3 = Color3.fromRGB(175,175,175)
+            bar.BorderSizePixel = 0
+            bar.Parent = barBack
+
+            local barFillCorner = Instance.new("UICorner")
+            barFillCorner.CornerRadius = UDim.new(1,0)
+            barFillCorner.Parent = bar
+
+            task.spawn(function()
+                while startupGui and startupGui.Parent and not startupFinished do
+                    local ring = Instance.new("Frame")
+                    ring.AnchorPoint = Vector2.new(0.5,0.5)
+                    ring.Position = UDim2.fromScale(0.5,0.5)
+                    ring.Size = UDim2.fromOffset(140,140)
+                    ring.BackgroundTransparency = 1
+                    ring.Parent = center
+
+                    local ringStroke = Instance.new("UIStroke")
+                    ringStroke.Thickness = 2
+                    ringStroke.Transparency = 0.25
+                    ringStroke.Color = Color3.fromRGB(145,145,145)
+                    ringStroke.Parent = ring
+
+                    local ringCorner = Instance.new("UICorner")
+                    ringCorner.CornerRadius = UDim.new(1,0)
+                    ringCorner.Parent = ring
+
+                    local tween = TweenService:Create(ring,TweenInfo.new(1.2,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{
+                        Size = UDim2.fromOffset(420,420)
+                    })
+                    local fade = TweenService:Create(ringStroke,TweenInfo.new(1.2,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{
+                        Transparency = 1
+                    })
+                    tween:Play()
+                    fade:Play()
+                    task.delay(1.25,function()
+                        if ring then ring:Destroy() end
+                    end)
+                    task.wait(0.38)
+                end
+            end)
+
+            task.spawn(function()
+                while startupGui and startupGui.Parent and not startupFinished do
+                    TweenService:Create(image,TweenInfo.new(0.65,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut),{
+                        Size = UDim2.fromOffset(150,150)
+                    }):Play()
+                    task.wait(0.65)
+                    if not (startupGui and startupGui.Parent and not startupFinished) then break end
+                    TweenService:Create(image,TweenInfo.new(0.65,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut),{
+                        Size = UDim2.fromOffset(140,140)
+                    }):Play()
+                    task.wait(0.65)
+                end
+            end)
+
+            updateStartupProgress = function(value,textValue)
+                if startupFinished or not startupGui or not startupGui.Parent then return end
+                startupProgress = math.clamp(tonumber(value) or 0,0,100)
+                status.Text = textValue or "正在启动..."
+                TweenService:Create(bar,TweenInfo.new(0.25,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{
+                    Size = UDim2.new(startupProgress/100,0,1,0)
+                }):Play()
+            end
+
+            finishStartup = function()
+                if startupFinished then return end
+                startupFinished = true
+                if not startupGui or not startupGui.Parent then return end
+
+                updateStartupProgress(100,"加载完成")
+                task.wait(0.35)
+
+                local fadeObjects = {}
+                for _,obj in ipairs(startupGui:GetDescendants()) do
+                    if obj:IsA("GuiObject") then
+                        table.insert(fadeObjects,obj)
+                    end
+                end
+                for _,obj in ipairs(fadeObjects) do
+                    pcall(function()
+                        if obj:IsA("TextLabel") then
+                            TweenService:Create(obj,TweenInfo.new(0.35),{TextTransparency=1}):Play()
+                        elseif obj:IsA("ImageLabel") then
+                            TweenService:Create(obj,TweenInfo.new(0.35),{ImageTransparency=1}):Play()
+                        elseif obj:IsA("Frame") then
+                            TweenService:Create(obj,TweenInfo.new(0.35),{BackgroundTransparency=1}):Play()
+                        end
+                    end)
+                end
+                task.wait(0.4)
+                if startupGui then startupGui:Destroy() end
+            end
+
+            updateStartupProgress(15,"正在初始化...")
+            return true
+        end)
+        if not ok then
+            startupGui = nil
+            finishStartup = nil
+            updateStartupProgress = nil
+        end
+        return result
+    end
+
+    createStartupAnimation()
+end
+
+local ok,err=xpcall(function()
 
 local function gradient(text,startColor,endColor)
     local result=""
@@ -84,7 +283,7 @@ if not B then
         A:SetCore("SendNotification",{Title="WindUI加载失败",Text="请检查Delta网络/HttpGet支持",Duration=5})
     end)
     warn("[ink_HUB] WindUI加载失败:", winduiLastError)
-    return
+    error("WindUI加载失败: " .. tostring(winduiLastError))
 end
 
 pcall(function()
@@ -132,6 +331,11 @@ if not windowOk or not windowResult then
 end
 
 C = windowResult
+
+pcall(function()
+    C:Tag({ Title = "永久免费", Radius = 5, Color = Color3.fromHex("#555555") })
+    C:Tag({ Title = "2026", Radius = 6, Color = Color3.fromHex("#B0B0B0") })
+end)
 
 pcall(function()
     C:EditOpenButton({
@@ -328,6 +532,22 @@ E:Slider({Title="修改跳跃高度",Value={Min=20,Max=200,Default=50},Callback=
     end
 end})
 
+E:Toggle({Title="启用设置重力",Value=false,Callback=function(s)
+    gravityEnabled=s
+    if s then
+        workspace.Gravity=gravityValue
+    else
+        workspace.Gravity=196.2
+    end
+end})
+
+E:Slider({Title="设置重力",Value={Min=0,Max=500,Default=196.2},Step=1,Callback=function(v)
+    gravityValue=v
+    if gravityEnabled then
+        workspace.Gravity=v
+    end
+end})
+
 E:Slider({
     Title = "视野",
     Value = { Min = 60, Max = 120, Default = 70 },
@@ -382,12 +602,18 @@ E:Slider({
 
 E:Button({Title="飞行",Callback=function()loadstring(game:HttpGet("https://raw.githubusercontent.com/inkkkkkkkk/Theinkremains/refs/heads/main/%E9%A3%9E%E8%A1%8C%E8%84%9A%E6%9C%AC.lua"))()end})
 
+E:Button({Title="飞车",Callback=function()loadstring(game:HttpGet("https://raw.githubusercontent.com/inkkkkkkkk/Theinkremains/refs/heads/main/%E9%A3%9E%E8%BD%A6.lua"))()end})
+
 LocalPlayer.CharacterAdded:Connect(function(char)
     task.wait(0.1)
     local hum=char:FindFirstChildOfClass("Humanoid")
     if hum then
         hum.WalkSpeed=speedEnabled and speedValue or 16
         hum.JumpPower=jumpEnabled and jumpValue or 50
+        if rotationEnabled then
+            task.wait(0.1)
+            startRotation()
+        end
     end
 end)
 
@@ -466,6 +692,38 @@ E:Toggle({
     end
 })
 
+local afkEnabled = false
+local afkThread = nil
+
+E:Toggle({
+    Title = "AFK",
+    Value = false,
+    Callback = function(v)
+        afkEnabled = v
+        if v then
+            if afkThread then
+                task.cancel(afkThread)
+            end
+            afkThread = task.spawn(function()
+                while afkEnabled do
+                    local player = game.Players.LocalPlayer
+                    local character = player and player.Character
+                    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+                    if humanoid then
+                        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                    end
+                    task.wait(3)
+                end
+            end)
+        else
+            if afkThread then
+                task.cancel(afkThread)
+                afkThread = nil
+            end
+        end
+    end
+})
+
 E:Button({
     Title = "防甩飞",
     Callback = function()
@@ -479,12 +737,6 @@ E:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/zczczczc766/ink/refs/heads/main/%E9%98%B2%E6%AD%A2%E6%91%94%E8%90%BD%E4%BC%A4%E5%AE%B3.lua"))()
     end
 })
-
-E:Button({Title = "祖国人",Callback = function()loadstring(game:HttpGet("https://raw.githubusercontent.com/giobolqv1/homelander-by-GioBolqv1-/main/homelander.lua"))()end})
-
-E:Button({Title="无敌少侠飞行",Callback=function()loadstring(game:HttpGet("https://raw.githubusercontent.com/396abc/Script/refs/heads/main/MobileFly.lua"))()end})
-
-E:Button({Title="无敌少侠大全",Callback=function()loadstring(game:HttpGet("https://raw.githubusercontent.com/giobolqv1/invincible-characters-animations-by-GioBolqv1-/refs/heads/main/universal.lua"))()end})
 
 local function forceChatVisible()
     local player=game.Players.LocalPlayer
@@ -524,9 +776,25 @@ end
 
 E:Button({Title="强制显示聊天框",Callback=function()forceChatVisible()end})
 
+E:Button({Title="电脑端物品栏",Callback=function()
+    local src = game:HttpGet("http://raw.githubusercontent.com/ltseverydayyou/uuuuuuu/refs/heads/main/mobileBACKPACK.lua")
+    src = src:gsub("HOTBAR_SLOTS_MINI: number = 6", "HOTBAR_SLOTS_MINI: number = 10")
+    loadstring(src)()
+end})
+
+E:Button({Title = "祖国人",Callback = function()loadstring(game:HttpGet("https://raw.githubusercontent.com/giobolqv1/homelander-by-GioBolqv1-/main/homelander.lua"))()end})
+
+E:Button({Title="无敌少侠飞行",Callback=function()loadstring(game:HttpGet("https://raw.githubusercontent.com/396abc/Script/refs/heads/main/MobileFly.lua"))()end})
+
+E:Button({Title="无敌少侠大全",Callback=function()loadstring(game:HttpGet("https://raw.githubusercontent.com/giobolqv1/invincible-characters-animations-by-GioBolqv1-/refs/heads/main/universal.lua"))()end})
+
 E:Button({Title="走路撞人",Callback=function()loadstring(game:HttpGet(('https://raw.githubusercontent.com/0Ben1/fe/main/obf_5wpM7bBcOPspmX7lQ3m75SrYNWqxZ858ai3tJdEAId6jSI05IOUB224FQ0VSAswH.lua.txt'),true))()end})
 
 E:Button({Title="铁拳打人",Callback=function()loadstring(game:HttpGet(('https://raw.githubusercontent.com/0Ben1/fe/main/obf_rf6iQURzu1fqrytcnLBAvW34C9N55kS9g9G3CKz086rC47M6632sEd4ZZYB0AYgV.lua.txt'),true))()end})
+
+E:Button({Title="甩飞攻击",Callback=function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-THE-REAL-dropkick-177199"))()
+end})
 
 local P = D:Tab({Title="透视", Icon="eye"})
 
@@ -1376,7 +1644,37 @@ local BeautifyTab = D:Tab({Title="美化", Icon="sparkles"})
 BeautifyTab:Button({
     Title = "加载美化菜单",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/zczczczc766/NailongHUB/refs/heads/main/%E7%BE%8E%E5%8C%96.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/inkkkkkkkk/Theinkremains/refs/heads/main/%E7%BE%8E%E5%8C%96.lua"))()
+    end
+})
+
+local IYTab = D:Tab({Title="IY指令", Icon="terminal"})
+
+IYTab:Button({
+    Title = "执行Dex",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/inkkkkkkkk/Theinkremains/refs/heads/main/Dex%2B%2B%E4%BF%AE%E5%A4%8D%E5%8F%8D%E7%BC%96%E8%AF%91(1)%20(1).lua"))()
+    end
+})
+
+IYTab:Button({
+    Title = "执行rspy",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastefy.app/EVVdCgPf/raw"))()
+    end
+})
+
+IYTab:Button({
+    Title = "执行mdex",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))()
+    end
+})
+
+IYTab:Button({
+    Title = "执行Cspy",
+    Callback = function()
+        loadstring(game:HttpGet("https://gitlab.com/upio/cobalt/-/releases/permalink/latest/downloads/Cobalt.luau"))()
     end
 })
 
@@ -1386,6 +1684,7 @@ L:Button({Title="被遗弃人物", Callback=function() loadstring(game:HttpGet("
 L:Button({Title="R15下蹲", Callback=function() loadstring(game:HttpGet("https://raw.githubusercontent.com/Azizanzz0/Scripts/refs/heads/main/Crouching.txt"))() end})
 L:Button({Title="爬行", Callback=function() loadstring(game:HttpGet("https://raw.githubusercontent.com/0Ben1/fe/main/obf_vZDX8j5ggfAf58QhdJ59BVEmF6nmZgq4Mcjt2l8wn16CiStIW2P6EkNc605qv9K4.lua.txt"))() end})
 L:Button({Title="免费动作", Callback=function() loadstring(game:HttpGet("https://raw.githubusercontent.com/Gazer-Ha/Free-emote/refs/heads/main/Delta%20mad%20stuffs"))() end})
+L:Button({Title="R6动作", Callback=function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-R6-Animations-Menu-By-Me-19427"))() end})
 L:Button({Title="假延迟", Callback=function() loadstring(game:HttpGet("https://raw.githubusercontent.com/RENZXW/RENZXW-SCRIPTS/main/fakeLAGRENZXW.txt"))() end})
 L:Button({Title="假VR(仅自然灾害)", Callback=function() loadstring(game:HttpGet("https://pastefy.app/MvKHpycG/raw"))() end})
 L:Button({Title="冲刺", Callback=function() loadstring(game:HttpGet("https://pastefy.app/ZhKVgCK3/raw"))() end})
@@ -1393,6 +1692,8 @@ L:Button({Title="NPC控制", Callback=function() loadstring(game:HttpGet("https:
 L:Button({Title="击杀NPC", Callback=function() loadstring(game:HttpGet("https://raw.githubusercontent.com/GUI-Offical/FileTest/refs/heads/main/Grab%20R6.txt", true))() end})
 L:Button({Title="更改动画包+动作", Callback=function() loadstring(game:HttpGet("https://raw.githubusercontent.com/7yd7/Hub/refs/heads/Branch/GUIS/Emotes.lua"))() end})
 L:Button({Title="更改动画包", Callback=function() loadstring(game:HttpGet("https://api.rubis.app/v2/scrap/PwFrcMysMOIJuWAQ/raw"))() end})
+L:Button({Title="SCP_096", Callback=function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-SCP-096-36948"))() end})
+L:Button({Title="天空盒", Callback=function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fe-Emote-Player-51936"))() end})
 
 local M=D:Tab({Title="漏洞",Icon="bug"})
 M:Button({Title="AC6音乐播放器",Callback=function()loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-Ac6-Music-Vulnerability-25536"))()end})
@@ -1407,7 +1708,7 @@ local O=D:Tab({Title="被遗弃",Icon="ghost"})
 O:Button({
     Title = "加载角色/皮肤修改器",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/zczczczc766/NailongHUB/refs/heads/main/%E8%A2%AB%E9%81%97%E5%BC%83%E8%A7%92%E8%89%B2or%E7%9A%AE%E8%82%A4%E5%88%87%E6%8D%A2%E5%99%A8.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/inkkkkkkkk/Theinkremains/refs/heads/main/%E8%A2%AB%E9%81%97%E5%BC%83%E8%A7%92%E8%89%B2or%E7%9A%AE%E8%82%A4%E5%88%87%E6%8D%A2%E5%99%A8.lua"))()
     end
 })
 
@@ -1588,6 +1889,15 @@ O:Toggle({Title="访客666大运",Value=false,Callback=function(s)
         if guest666Thread then task.cancel(guest666Thread) guest666Thread=nil end
     end
 end})
+
+local EndlessRealityTab = D:Tab({Title="无尽现实", Icon="infinity"})
+
+EndlessRealityTab:Button({
+    Title = "执行ink_无尽现实",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/inkkkkkkkk/Theinkremains/refs/heads/main/%E6%97%A0%E5%B0%BD%E7%8E%B0%E5%AE%9E.lua"))()
+    end
+})
 
 local FlashTab = D:Tab({Title="闪光", Icon="sparkles"})
 
@@ -3010,6 +3320,11 @@ if finishStartup then
 end
 
 end,function(e)
+    local errorText=tostring(e):sub(1,100)
+    if updateStartupProgress then
+        pcall(updateStartupProgress,100,"加载失败")
+    end
+    safeNotify("ink_HUB错误",errorText,5)
+    task.wait(0.8)
     if finishStartup then pcall(finishStartup) end
-    safeNotify("ink_HUB错误",tostring(e):sub(1,100),5)
 end)
