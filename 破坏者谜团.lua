@@ -1,17 +1,31 @@
--- ink_HUB | 启动动画 + 仅透视分区
--- 启动动画会先完整播放；之后才尝试加载 WindUI。
-
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local CoreGui = game:GetService("CoreGui")
 local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
 local LocalPlayer = Players.LocalPlayer
+
+local function getGuiParent()
+    local ok, parent = pcall(function()
+        local test = Instance.new("ScreenGui")
+        test.Parent = CoreGui
+        test:Destroy()
+        return CoreGui
+    end)
+    if ok and parent then return parent end
+    return Players.LocalPlayer:WaitForChild("PlayerGui")
+end
 
 local function playStartupAnimation()
     local gui
+    local blur
     local ok, err = pcall(function()
-        local old = CoreGui:FindFirstChild("ink_HUB_StartupAnimation")
+        local parent = getGuiParent()
+
+        local old = parent:FindFirstChild("ink_HUB_StartupAnimation")
         if old then old:Destroy() end
+        local oldBlur = Lighting:FindFirstChild("ink_HUB_StartupBlur")
+        if oldBlur then oldBlur:Destroy() end
 
         gui = Instance.new("ScreenGui")
         gui.Name = "ink_HUB_StartupAnimation"
@@ -19,71 +33,159 @@ local function playStartupAnimation()
         gui.ResetOnSpawn = false
         gui.DisplayOrder = 2147483647
         gui.ZIndexBehavior = Enum.ZIndexBehavior.Global
-        gui.Parent = CoreGui
+        gui.Parent = parent
+
+        blur = Instance.new("BlurEffect")
+        blur.Name = "ink_HUB_StartupBlur"
+        blur.Size = 30
+        blur.Parent = Lighting
 
         local bg = Instance.new("Frame")
-        bg.Size = UDim2.fromScale(1, 1)
-        bg.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+        bg.Name = "Bg"
+        bg.AnchorPoint = Vector2.new(0.5, 0.5)
+        bg.Position = UDim2.fromScale(0.5, 0.5)
+        bg.Size = UDim2.new(1, 200, 1, 200)
+        bg.BackgroundColor3 = Color3.fromRGB(140, 0, 0) 
         bg.BorderSizePixel = 0
+        bg.ZIndex = 1
         bg.Parent = gui
+        
+        local bgGrad = Instance.new("UIGradient")
+        bgGrad.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(70, 0, 0)),
+            ColorSequenceKeypoint.new(0.5, Color3.fromRGB(180, 0, 0)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 0, 0)),
+        })
+        bgGrad.Rotation = 90
+        bgGrad.Parent = bg
+
+        local fadeTargets = { bg }
+
+        local bloodTweens = {}
+        for i = 1, 120 do
+            local isDrop = math.random(1, 2) == 1
+            local blood = Instance.new("Frame")
+            blood.BackgroundColor3 = Color3.fromRGB(25, 0, 0)
+            blood.BorderSizePixel = 0
+            blood.AnchorPoint = Vector2.new(0.5, 0.5)
+            blood.ZIndex = 3
+            
+            if isDrop then
+                local w = math.random(8, 22)
+                local h = w * (2 + math.random() * 4)
+                blood.Size = UDim2.fromOffset(w, h)
+                local corner = Instance.new("UICorner")
+                corner.CornerRadius = UDim.new(0.5, 0)
+                corner.Parent = blood
+            else
+                local size = math.random(20, 70)
+                blood.Size = UDim2.fromOffset(size, size)
+                local corner = Instance.new("UICorner")
+                corner.CornerRadius = UDim.new(0.5, 0)
+                corner.Parent = blood
+            end
+            
+            local edge = math.random(1, 4)
+            if edge == 1 then
+                blood.Position = UDim2.new(math.random(-20, 40) / 100, 0, math.random(), 0)
+                blood.Rotation = math.random(70, 110)
+            elseif edge == 2 then
+                blood.Position = UDim2.new(math.random(60, 120) / 100, 0, math.random(), 0)
+                blood.Rotation = math.random(70, 110)
+            elseif edge == 3 then
+                blood.Position = UDim2.new(math.random(), 0, math.random(-20, 40) / 100, 0)
+                blood.Rotation = math.random(-20, 20)
+            else
+                blood.Position = UDim2.new(math.random(), 0, math.random(60, 120) / 100, 0)
+                blood.Rotation = math.random(-20, 20)
+            end
+            
+            blood.BackgroundTransparency = math.random(0, 30) / 100
+            blood.Parent = bg
+            table.insert(fadeTargets, blood)
+
+            if math.random(1, 2) == 1 then
+                local flashTween = TweenService:Create(blood, TweenInfo.new(
+                    math.random(10, 25) / 10, 
+                    Enum.EasingStyle.Sine, 
+                    Enum.EasingDirection.InOut,
+                    -1, 
+                    true 
+                ), { BackgroundTransparency = 1 })
+                flashTween:Play()
+                table.insert(bloodTweens, flashTween)
+            end
+        end
 
         local image = Instance.new("ImageLabel")
         image.Name = "Logo"
         image.AnchorPoint = Vector2.new(0.5, 0.5)
-        image.Position = UDim2.new(0.5, 0, 1, 180)
-        image.Size = UDim2.fromOffset(210, 210)
+        image.Position = UDim2.fromScale(0.5, 1.5)
+        image.Size = UDim2.fromOffset(300, 300)
         image.BackgroundTransparency = 1
         image.Image = "rbxassetid://97528294523613"
         image.ScaleType = Enum.ScaleType.Fit
-        image.Active = false
-        image.Selectable = false
+        image.ZIndex = 4
         image.Parent = bg
 
         local title = Instance.new("TextLabel")
         title.Name = "Title"
-        title.AnchorPoint = Vector2.new(0, 0.5)
-        title.Position = UDim2.new(0, -460, 0.5, 135)
-        title.Size = UDim2.fromOffset(440, 64)
+        title.AnchorPoint = Vector2.new(0.5, 0.5)
+        title.Position = UDim2.fromScale(1.5, 0.5)
+        title.Size = UDim2.fromOffset(600, 120)
         title.BackgroundTransparency = 1
         title.Text = "破坏者谜团2"
-        title.TextColor3 = Color3.fromRGB(255, 25, 25)
-        title.TextStrokeColor3 = Color3.fromRGB(80, 0, 0)
-        title.TextStrokeTransparency = 0.3
-        title.TextSize = 38
-        title.Font = Enum.Font.GothamBold
+        title.TextColor3 = Color3.fromRGB(255, 10, 10)
+        title.TextStrokeColor3 = Color3.fromRGB(40, 0, 0)
+        title.TextStrokeTransparency = 0
+        title.TextSize = 65
+        title.Font = Enum.Font.GothamBlack
         title.TextXAlignment = Enum.TextXAlignment.Center
-        title.Active = false
-        title.Selectable = false
+        title.ZIndex = 5
         title.Parent = bg
 
-        TweenService:Create(image, TweenInfo.new(1.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            Position = UDim2.fromScale(0.5, 0.43)
+        table.insert(fadeTargets, image)
+        table.insert(fadeTargets, title)
+
+        TweenService:Create(image, TweenInfo.new(0.9, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            Position = UDim2.fromScale(0.5, 0.5)
         }):Play()
-        task.wait(1.45)
+        task.wait(1.0)
 
-        local moveImage = TweenService:Create(image, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
-            Position = UDim2.fromScale(0.23, 0.43)
-        })
-        local moveTitle = TweenService:Create(title, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            Position = UDim2.new(0.42, 0, 0.5, 135)
-        })
-        moveImage:Play()
-        moveTitle:Play()
-        moveImage.Completed:Wait()
-        task.wait(0.45)
+        local phase2 = TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        TweenService:Create(image, phase2, { Position = UDim2.fromScale(0.38, 0.5) }):Play()
+        TweenService:Create(title, phase2, { Position = UDim2.fromScale(0.62, 0.5) }):Play()
+        task.wait(0.8)
 
-        -- 动画结束后淡出并清理；后续 UI 才开始加载。
-        local fadeInfo = TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-        TweenService:Create(bg, fadeInfo, {BackgroundTransparency = 1}):Play()
-        TweenService:Create(image, fadeInfo, {ImageTransparency = 1}):Play()
-        TweenService:Create(title, fadeInfo, {TextTransparency = 1, TextStrokeTransparency = 1}):Play()
-        task.wait(0.4)
+        task.wait(0.8)
+
+        for _, tween in ipairs(bloodTweens) do
+            tween:Cancel()
+        end
+
+        local fade = TweenInfo.new(0.9, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        for _, obj in ipairs(fadeTargets) do
+            local props = {}
+            if obj:IsA("Frame") then
+                props.BackgroundTransparency = 1
+            elseif obj:IsA("ImageLabel") then
+                props.ImageTransparency = 1
+            elseif obj:IsA("TextLabel") then
+                props.TextTransparency = 1
+                props.TextStrokeTransparency = 1
+            end
+            if next(props) then
+                TweenService:Create(obj, fade, props):Play()
+            end
+        end
+        task.wait(0.9)
     end)
+
+    if blur then pcall(function() blur:Destroy() end) end
     if gui then pcall(function() gui:Destroy() end) end
     if not ok then warn("[ink_HUB] 启动动画异常：", tostring(err)) end
 end
 
--- 无论后续 UI 成功与否，动画都先完整播放。
 playStartupAnimation()
 
 local function loadWindUI()
@@ -156,7 +258,6 @@ pcall(function()
     })
 end)
 
--- 只创建“透视”分区；普通玩家、警长、杀手分别拥有透视文字、轮廓、追踪线三个独立开关。
 local P = window:Tab({Title = "透视", Icon = "eye"})
 local categorySettings = {
     Normal = {
@@ -174,7 +275,8 @@ local categorySettings = {
         espColor = Color3.fromRGB(0, 120, 255),
         outlineColor = Color3.fromRGB(0, 120, 255),
         tracerColor = Color3.fromRGB(0, 120, 255),
-    },
+ 
+     },
     Killer = {
         title = "透视杀手",
         color = Color3.fromRGB(255, 0, 0),
@@ -311,7 +413,6 @@ local function updateVisuals()
                 high.Enabled = false
             end
 
-            -- 类别切换时立即隐藏旧类别的视觉，避免残留颜色/轮廓。
             if not settings then
                 if textObj then textObj.Visible = false end
                 if lineObj then lineObj.Visible = false end
@@ -369,7 +470,7 @@ Players.PlayerRemoving:Connect(removePlayerVisuals)
 local function addCategoryControls(key)
     local s = categorySettings[key]
     local group = P:Section({Title = s.title, Opened = true})
-    local prefix = key == "Normal" and "普通" or (key == "Sheriff" and "警长" or "杀手")
+    local prefix = key == "Normal" and "玩家" or (key == "Sheriff" and "警长" or "杀手")
     group:Toggle({Title = prefix .. "透视", Value = false, Callback = function(v) setOption(key, "esp", v) end})
     group:Colorpicker({Title = prefix .. "透视颜色", Default = s.espColor, Callback = function(v) s.espColor = v end})
     group:Toggle({Title = prefix .. "轮廓", Value = false, Callback = function(v) setOption(key, "outline", v) end})
@@ -382,4 +483,4 @@ addCategoryControls("Normal")
 addCategoryControls("Sheriff")
 addCategoryControls("Killer")
 
-print("[ink_HUB] 仅透视分区已加载")
+print("[ink_HUB] 已加载")
