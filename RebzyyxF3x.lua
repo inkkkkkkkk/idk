@@ -38,50 +38,50 @@ local T2 = c("TextLabel", {BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0,
 local T3 = c("TextLabel", {BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 20), Position = UDim2.new(0, 0, 0, 45), Font = Enum.Font.Code, Text = "BY.Rebzyyx/Rezlaine", TextColor3 = RED, TextSize = 13, TextTransparency = 1}, TxtBox)
 
 local MainGui = c("ScreenGui", {Parent = pgui}, nil)
-local Main = c("Frame", {BackgroundColor3 = BG, Position = UDim2.new(0.5, 0, 1.5, 0), AnchorPoint = Vector2.new(0.5, 0.5), Size = UDim2.new(0, 500, 0, 360), ClipsDescendants = true, BorderSizePixel = 0}, MainGui)
+local Main = c("Frame", {BackgroundColor3 = BG, Position = UDim2.new(0.5, 0, 1.5, 0), AnchorPoint = Vector2.new(0.5, 0.5), Size = UDim2.new(0, 500, 0, 360), ClipsDescendants = true, BorderSizePixel = 0, ZIndex = 1}, MainGui)
 c("UICorner", {CornerRadius = UDim.new(0, 10)}, Main)
 c("UIStroke", {Color = RED, Thickness = 2, Transparency = 0.1}, Main)
 
 local UIScale = c("UIScale", {Scale = 1}, Main)
 
-local Top = c("Frame", {BackgroundColor3 = PNL, Size = UDim2.new(1, 0, 0, 45), BorderSizePixel = 0, ClipsDescendants = true}, Main)
+local Top = c("Frame", {BackgroundColor3 = PNL, Size = UDim2.new(1, 0, 0, 45), BorderSizePixel = 0, ClipsDescendants = true, ZIndex = 5}, Main)
 c("UICorner", {CornerRadius = UDim.new(0, 10)}, Top)
-c("Frame", {BackgroundColor3 = PNL, Size = UDim2.new(1, 0, 0, 20), Position = UDim2.new(0, 0, 0, 25), BorderSizePixel = 0}, Top)
-c("Frame", {BackgroundColor3 = RED, Size = UDim2.new(1, 0, 0, 1), Position = UDim2.new(0, 0, 1, -1), BorderSizePixel = 0}, Top)
 
-c("TextLabel", {BackgroundTransparency = 1, Size = UDim2.new(0, 150, 1, 0), Position = UDim2.new(0, 15, 0, 0), Font = Enum.Font.GothamBlack, Text = "REBZYYX", TextColor3 = TXT, TextSize = 24, TextXAlignment = Enum.TextXAlignment.Left}, Top)
-c("TextLabel", {BackgroundTransparency = 1, Size = UDim2.new(0, 150, 1, 0), Position = UDim2.new(0, 140, 0, 0), Font = Enum.Font.GothamBold, Text = "F3Xgui V67", TextColor3 = RED, TextSize = 16, TextXAlignment = Enum.TextXAlignment.Left}, Top)
+local RedLine = c("Frame", {Name = "RedLine", BackgroundColor3 = RED, Size = UDim2.new(1, 0, 0, 1), Position = UDim2.new(0, 0, 1, -1), BorderSizePixel = 0, ZIndex = 5}, Top)
 
-local Close = c("TextButton", {BackgroundTransparency = 1, Size = UDim2.new(0, 35, 1, 0), Position = UDim2.new(1, -35, 0, 0), Text = "×", TextColor3 = TXT, TextSize = 24, Font = Enum.Font.GothamBold, AutoButtonColor = false, BorderSizePixel = 0}, Top)
+c("TextLabel", {BackgroundTransparency = 1, Size = UDim2.new(0, 150, 1, 0), Position = UDim2.new(0, 15, 0, 0), Font = Enum.Font.GothamBlack, Text = "REBZYYX", TextColor3 = TXT, TextSize = 24, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 6}, Top)
+c("TextLabel", {BackgroundTransparency = 1, Size = UDim2.new(0, 150, 1, 0), Position = UDim2.new(0, 140, 0, 0), Font = Enum.Font.GothamBold, Text = "F3Xgui V67", TextColor3 = RED, TextSize = 16, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 6}, Top)
+
+local Close = c("TextButton", {BackgroundTransparency = 1, Size = UDim2.new(0, 35, 1, 0), Position = UDim2.new(1, -35, 0, 0), Text = "×", TextColor3 = TXT, TextSize = 24, Font = Enum.Font.GothamBold, AutoButtonColor = false, BorderSizePixel = 0, ZIndex = 10}, Top)
 Close.MouseEnter:Connect(function() Close.TextColor3 = RED end)
 Close.MouseLeave:Connect(function() Close.TextColor3 = TXT end)
 
-local Min = c("TextButton", {BackgroundTransparency = 1, Size = UDim2.new(0, 35, 1, 0), Position = UDim2.new(1, -70, 0, 0), Text = "—", TextColor3 = TXT, TextSize = 16, Font = Enum.Font.GothamBold, AutoButtonColor = false, BorderSizePixel = 0}, Top)
+local Min = c("TextButton", {BackgroundTransparency = 1, Size = UDim2.new(0, 35, 1, 0), Position = UDim2.new(1, -70, 0, 0), Text = "—", TextColor3 = TXT, TextSize = 16, Font = Enum.Font.GothamBold, AutoButtonColor = false, BorderSizePixel = 0, ZIndex = 10}, Top)
 Min.MouseEnter:Connect(function() Min.TextColor3 = RED end)
 Min.MouseLeave:Connect(function() Min.TextColor3 = TXT end)
 
-local Side = c("Frame", {BackgroundColor3 = PNL, Position = UDim2.new(0, 0, 0, 45), Size = UDim2.new(0, 120, 1, -45), BorderSizePixel = 0, ClipsDescendants = true}, Main)
+local Side = c("Frame", {BackgroundColor3 = PNL, Position = UDim2.new(0, 0, 0, 45), Size = UDim2.new(0, 120, 1, -45), BorderSizePixel = 0, ClipsDescendants = true, ZIndex = 2}, Main)
 c("UICorner", {CornerRadius = UDim.new(0, 10)}, Side)
-c("Frame", {BackgroundColor3 = BG, Position = UDim2.new(1, -1, 0, 0), Size = UDim2.new(0, 1, 1, 0), BorderSizePixel = 0}, Side)
+c("Frame", {BackgroundColor3 = BG, Position = UDim2.new(1, -1, 0, 0), Size = UDim2.new(0, 1, 1, 0), BorderSizePixel = 0, ZIndex = 2}, Side)
 
-local Cont = c("Frame", {BackgroundTransparency = 1, Position = UDim2.new(0, 130, 0, 60), Size = UDim2.new(0, 350, 0, 290), BorderSizePixel = 0}, Main)
+local Cont = c("Frame", {BackgroundTransparency = 1, Position = UDim2.new(0, 130, 0, 60), Size = UDim2.new(0, 350, 0, 290), BorderSizePixel = 0, ZIndex = 2}, Main)
 
-local Ind = c("Frame", {BackgroundColor3 = RED, Position = UDim2.new(0, 5, 0, 29), Size = UDim2.new(0, 3, 0, 22), BorderSizePixel = 0}, Side)
+local Ind = c("Frame", {BackgroundColor3 = RED, Position = UDim2.new(0, 5, 0, 29), Size = UDim2.new(0, 3, 0, 22), BorderSizePixel = 0, ZIndex = 3}, Side)
 c("UICorner", {CornerRadius = UDim.new(1, 0)}, Ind)
 
 local NB = {}
 local function mNB(t, y)
-    local b = c("TextButton", {BackgroundTransparency = 1, Position = UDim2.new(0, 20, 0, y), Size = UDim2.new(0, 100, 0, 40), Font = Enum.Font.GothamBold, Text = t, TextColor3 = DIM, TextSize = 15, TextXAlignment = Enum.TextXAlignment.Left, BorderSizePixel = 0}, Side)
+    local b = c("TextButton", {BackgroundTransparency = 1, Position = UDim2.new(0, 20, 0, y), Size = UDim2.new(0, 100, 0, 40), Font = Enum.Font.GothamBold, Text = t, TextColor3 = DIM, TextSize = 15, TextXAlignment = Enum.TextXAlignment.Left, BorderSizePixel = 0, ZIndex = 3}, Side)
     b.MouseEnter:Connect(function() if b.TextColor3 == DIM then b.TextColor3 = WHT end end)
     b.MouseLeave:Connect(function() if b.TextColor3 == WHT then b.TextColor3 = DIM end end)
     table.insert(NB, b)
     return b
 end
 
-local Home = c("Frame", {BackgroundTransparency = 1, Size = UDim2.new(1, 0, 1, 0), BorderSizePixel = 0}, Cont)
-local P2 = c("Frame", {BackgroundTransparency = 1, Size = UDim2.new(1, 0, 1, 0), Visible = false, BorderSizePixel = 0}, Cont)
-local P3 = c("Frame", {BackgroundTransparency = 1, Size = UDim2.new(1, 0, 1, 0), Visible = false, BorderSizePixel = 0}, Cont)
-local P4 = c("Frame", {BackgroundTransparency = 1, Size = UDim2.new(1, 0, 1, 0), Visible = false, BorderSizePixel = 0}, Cont)
+local Home = c("Frame", {BackgroundTransparency = 1, Size = UDim2.new(1, 0, 1, 0), BorderSizePixel = 0, ZIndex = 2}, Cont)
+local P2 = c("Frame", {BackgroundTransparency = 1, Size = UDim2.new(1, 0, 1, 0), Visible = false, BorderSizePixel = 0, ZIndex = 2}, Cont)
+local P3 = c("Frame", {BackgroundTransparency = 1, Size = UDim2.new(1, 0, 1, 0), Visible = false, BorderSizePixel = 0, ZIndex = 2}, Cont)
+local P4 = c("Frame", {BackgroundTransparency = 1, Size = UDim2.new(1, 0, 1, 0), Visible = false, BorderSizePixel = 0, ZIndex = 2}, Cont)
 local P = {Home, P2, P3, P4}
 
 local NH, N1, N2, N3 = mNB("家", 20), mNB("基础", 70), mNB("音乐", 120), mNB("其它", 170)
@@ -97,17 +97,18 @@ N2.MouseButton1Down:Connect(function() setP(3) end)
 N3.MouseButton1Down:Connect(function() setP(4) end)
 setP(1)
 
-local function mBtn(par, t, pos)
-    local b = c("TextButton", {BackgroundColor3 = BTN, BorderSizePixel = 0, Position = pos, Size = UDim2.new(0, 105, 0, 38), Font = Enum.Font.GothamMedium, Text = t, TextColor3 = TXT, TextSize = 13, AutoButtonColor = false}, par)
+local function mBtn(par, t, pos, callback)
+    local b = c("TextButton", {BackgroundColor3 = BTN, BorderSizePixel = 0, Position = pos, Size = UDim2.new(0, 105, 0, 38), Font = Enum.Font.GothamMedium, Text = t, TextColor3 = TXT, TextSize = 13, AutoButtonColor = false, ZIndex = 3}, par)
     c("UICorner", {CornerRadius = UDim.new(0, 8)}, b)
     b.MouseEnter:Connect(function() TweenService:Create(b, TweenInfo.new(0.15), {BackgroundColor3 = BTN_HOVER}):Play() end)
     b.MouseLeave:Connect(function() TweenService:Create(b, TweenInfo.new(0.15), {BackgroundColor3 = BTN}):Play() end)
     b.MouseButton1Down:Connect(function() TweenService:Create(b, TweenInfo.new(0.05), {BackgroundColor3 = BTN_DOWN}):Play() end)
     b.MouseButton1Up:Connect(function() TweenService:Create(b, TweenInfo.new(0.15), {BackgroundColor3 = BTN_HOVER}):Play() end)
+    if callback then b.MouseButton1Click:Connect(callback) end
 end
 
 local function pop(par, list)
-    for i, n in ipairs(list) do mBtn(par, n, UDim2.new(0, ((i - 1) % 3) * 115, 0, math.floor((i - 1) / 3) * 48)) end
+    for i, n in ipairs(list) do mBtn(par, n[1], UDim2.new(0, ((i - 1) % 3) * 115, 0, math.floor((i - 1) / 3) * 48), n[2]) end
 end
 
 local Prof = c("Frame", {BackgroundColor3 = BTN, Size = UDim2.new(1, 0, 0, 80), Position = UDim2.new(0, 0, 0, 0), BorderSizePixel = 0}, Home)
@@ -130,6 +131,7 @@ local function mkStat(x, title)
     c("TextLabel", {BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 20), Position = UDim2.new(0, 0, 0, 5), Font = Enum.Font.GothamMedium, Text = title, TextColor3 = DIM, TextSize = 12}, b)
     return c("TextLabel", {BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 25), Position = UDim2.new(0, 0, 0, 20), Font = Enum.Font.GothamBlack, Text = "...", TextColor3 = TXT, TextSize = 16}, b)
 end
+
 local txtPing = mkStat(0, "延迟")
 local txtFps = mkStat(120, "帧率")
 local txtAge = mkStat(240, "注册天数")
@@ -158,26 +160,64 @@ c("ImageLabel", {
     ScaleType = Enum.ScaleType.Stretch
 }, Home)
 
-local testList1 = {}
-for i = 1, 12 do table.insert(testList1, "测试") end
-pop(P2, testList1)
+local function playMusic(id, pitch)
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local hdClient = ReplicatedStorage:FindFirstChild("HDAdminHDClient")
+    if hdClient then
+        hdClient.Signals.RequestCommandSilent:InvokeServer(";music "..id.." ;pitch "..(pitch or 1).." ;volume inf")
+    else
+        print("未找到 HD Admin 客户端，无法播放音乐。")
+    end
+end
 
-local testList2 = {}
-for i = 1, 9 do table.insert(testList2, "测试") end
-pop(P3, testList2)
-pop(P4, testList2)
+local MusicList = {
+    {"主题1", function() playMusic("86412047196482", 1.1) end},
+    {"主题2", function() playMusic("76578817848504", 1) end},
+    {"主题3", function() playMusic("71123357599630", 1) end},
+    {"jumpstyle", function() playMusic("1839246711", 1) end},
+    {"1x1", function() playMusic("139488665764275", 1.1) end},
+    {"真主", function() playMusic("85390427326662", 0.15) end},
+    {"jumpDance", function() playMusic("1839246879", 1) end},
+    {"unhappy", function() playMusic("88523902860927", 1) end},
+    {"g00by", function() playMusic("1847661821", 1) end},
+    {"c00kidd", function() playMusic("95156028272944", 0.2) end},
+    {"idk", function() playMusic("104497567166761", 0.25) end},
+    {"马里奥", function() playMusic("99907604701668", 0.128) end},
+    {"SpartaRemix", function() playMusic("73293994328169", 0.13) end},
+    {"jjee", function() playMusic("121917421105212", 0.15) end},
+    {"谁如此自主", function() playMusic("120785124326826", 0.9) end},
+    {"18 Мне Уже", function() playMusic("87744462419495", 0.13) end},
+    {"叙利亚", function() playMusic("136356992500400", 0.25) end},
+    {"停止音乐", function() 
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        local hdClient = ReplicatedStorage:FindFirstChild("HDAdminHDClient")
+        if hdClient then hdClient.Signals.RequestCommandSilent:InvokeServer(";unmusic") end
+    end}
+}
 
-local ResizeZone = c("TextButton", {BackgroundTransparency = 1, Size = UDim2.new(0, 30, 0, 30), Position = UDim2.new(1, -30, 1, -30), Text = "", BorderSizePixel = 0, ZIndex = 5}, Main)
+pop(P3, MusicList)
+pop(P2, {{"测试", function() end}, {"测试", function() end}, {"测试", function() end}})
+pop(P4, {{"测试", function() end}, {"测试", function() end}, {"测试", function() end}})
+
+local ResizeZone = c("TextButton", {BackgroundTransparency = 1, Size = UDim2.new(0, 30, 0, 30), Position = UDim2.new(1, -30, 1, -30), Text = "", BorderSizePixel = 0, ZIndex = 1}, Main)
 local isMin, normalSize, minSize = false, UDim2.new(0, 500, 0, 360), UDim2.new(0, 500, 0, 45)
 
 Min.MouseButton1Down:Connect(function()
     isMin = not isMin
     if isMin then
-        Side.Visible, Cont.Visible = false, false
+        Side.Visible = false
+        Cont.Visible = false
+        ResizeZone.Visible = false
+        RedLine.Visible = false
         TweenService:Create(Main, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = minSize}):Play()
     else
         TweenService:Create(Main, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = normalSize}):Play()
-        task.delay(0.3, function() Side.Visible, Cont.Visible = true, true end)
+        task.delay(0.3, function() 
+            Side.Visible = true
+            Cont.Visible = true
+            ResizeZone.Visible = true
+            RedLine.Visible = true
+        end)
     end
 end)
 
@@ -205,7 +245,10 @@ UIS.InputEnded:Connect(function(input)
     end
 end)
 
+local isClosing = false
 Close.MouseButton1Down:Connect(function()
+    if isClosing then return end
+    isClosing = true
     local absPos, absSize = Main.AbsolutePosition, Main.AbsoluteSize
     Main.Visible = false
     local pieces = {}
