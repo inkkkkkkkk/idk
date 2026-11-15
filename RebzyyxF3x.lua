@@ -19,7 +19,7 @@ local BTN_DOWN = Color3.fromRGB(20, 20, 25)
 local RED = Color3.fromRGB(200, 10, 30)
 local WHT = Color3.fromRGB(255, 255, 255)
 local TXT = Color3.fromRGB(255, 255, 255)
-local DIM = Color3.fromRGB(150, 150, 150)
+local DI = Color3.fromRGB(150, 150, 150)
 
 local BootGui = c("ScreenGui", {Parent = pgui, IgnoreGuiInset = true, DisplayOrder = 999}, nil)
 local MainBG = c("Frame", {BackgroundColor3 = Color3.fromRGB(3, 3, 3), Size = UDim2.new(1, 0, 1, 0), BorderSizePixel = 0}, BootGui)
@@ -188,6 +188,9 @@ local MusicList = {
     {"谁如此自主", function() playMusic("120785124326826", 0.9) end},
     {"18 Мне Уже", function() playMusic("87744462419495", 0.13) end},
     {"叙利亚", function() playMusic("136356992500400", 0.25) end},
+    {"i love you so", function() playMusic("100048144167699", 1) end},
+    {"感觉我根本不在这里", function() playMusic("83707813531588", 1) end},
+    {"jason", function() playMusic("87789875437291", 1) end},
     {"停止音乐", function() 
         local ReplicatedStorage = game:GetService("ReplicatedStorage")
         local hdClient = ReplicatedStorage:FindFirstChild("HDAdminHDClient")
