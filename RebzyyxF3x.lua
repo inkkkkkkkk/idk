@@ -19,7 +19,7 @@ local BTN_DOWN = Color3.fromRGB(20, 20, 25)
 local RED = Color3.fromRGB(200, 10, 30)
 local WHT = Color3.fromRGB(255, 255, 255)
 local TXT = Color3.fromRGB(255, 255, 255)
-local DI = Color3.fromRGB(150, 150, 150)
+local DIM = Color3.fromRGB(150, 150, 150)
 
 local BootGui = c("ScreenGui", {Parent = pgui, IgnoreGuiInset = true, DisplayOrder = 999}, nil)
 local MainBG = c("Frame", {BackgroundColor3 = Color3.fromRGB(3, 3, 3), Size = UDim2.new(1, 0, 1, 0), BorderSizePixel = 0}, BootGui)
